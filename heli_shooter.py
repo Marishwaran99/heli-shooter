@@ -23,7 +23,7 @@ clock=pygame.time.Clock()
 bg=pygame.image.load("bg.png")
 
 def msg(txt,size,color,x,y):
-    font=pygame.font.SysFont("comicsansms",size)
+    font=pygame.font.SysFont("comicsansms",size,bold=1)
     txtsurf=font.render(txt,True,color)
     txtrect=txtsurf.get_rect()
     txtrect.center=x,y
@@ -32,8 +32,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self,x,y): 
         super().__init__()
         self.image=pygame.image.load("copter.png")
-        self.image=pygame.transform.scale(self.image,[60,50])
- 
+        self.image=pygame.transform.scale(self.image,[60,50]) 
         self.rect=self.image.get_rect()
         self.rect.x=x
         self.rect.y=y
@@ -66,8 +65,7 @@ class Player(pygame.sprite.Sprite):
        elif keys[pygame.K_UP]:
            self.vy=-5
        elif keys[pygame.K_DOWN]:
-           self.vy=5
-           
+           self.vy=5           
        self.rect.x+=self.vx
        self.rect.y+=self.vy
        if self.rect.right>=400:
@@ -82,7 +80,6 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self,x,y,vx,vy):
         super().__init__()
         self.image=pygame.image.load("b.png")
-        self.image.convert_alpha()
         self.image.set_colorkey(Blue)
         self.rect=self.image.get_rect()
         self.rect.x=x
@@ -93,16 +90,13 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.x+=self.vx
         self.rect.y+=self.vy
         if self.rect.right>400+10:
-            self.kill()
-       
+            self.kill()       
 class Mob(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.i1=pygame.image.load("loon.png")
-        self.i1=pygame.transform.scale(self.i1,[30,50])
-       
-        self.image=self.i1
-        
+        self.i1=pygame.transform.scale(self.i1,[30,50])       
+        self.image=self.i1        
         self.rect=self.image.get_rect()
         x=400
         y=random.randrange(50,270)
@@ -110,9 +104,7 @@ class Mob(pygame.sprite.Sprite):
         self.rect.y=y
         self.shot_delay=500
         self.last=pygame.time.get_ticks()
-    def update(self):
-        
-            
+    def update(self):         
         if self.rect.right<=0:
           self.rect.x=370
           self.rect.y=random.randrange(30,250)
@@ -152,7 +144,6 @@ class Boat(pygame.sprite.Sprite):
         super().__init__()
         self.image=pygame.image.load("boat.png")
         self.image=pygame.transform.scale(self.image,[60,50])
- 
         self.rect=self.image.get_rect()
         self.rect.x=500
         self.rect.y=300
@@ -170,12 +161,10 @@ class Boat(pygame.sprite.Sprite):
            mobgen()
         now=pygame.time.get_ticks()
         if now-self.last_shot>600:
-            self.last_shot=now
-            
+            self.last_shot=now            
             ebullet=Ebullet(self.rect.centerx,self.rect.top,-10,-10)
             all_sprites.add(ebullet)
-            ebullets.add(ebullet)
-        
+            ebullets.add(ebullet)      
 class Ship(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -198,12 +187,16 @@ class Ecopter(pygame.sprite.Sprite):
         self.rect=self.image.get_rect()
         self.rect.x=400
         self.rect.y=random.randrange(50,250)
-        self.vx=-7
+        self.rect.x-=80
         self.last=pygame.time.get_ticks()
     def  update(self):
-        self.vy=random.randrange(-3,3)
-        self.rect.x+=self.vx
+        self.vy=3
+        if self.rect.y<10:
+            self.vy=3
         self.rect.y+=self.vy
+        if  self.rect.y>100:
+            self.vy=-3
+        self.rect.y+=self.vy    
         if self.rect.x<0:
             self.kill()
             mobgen()
@@ -213,18 +206,15 @@ class Ecopter(pygame.sprite.Sprite):
             ebullet=Ebullet(self.rect.centerx,self.rect.top,-10,0)
             all_sprites.add(ebullet)
             ebullets.add(ebullet)    
-def newmob():
-   
+def newmob():   
         mob=Mob()
         mobs.add(mob)
         all_sprites.add(mob)
-def newboat():
-    
+def newboat():   
     boat=Boat()
     all_sprites.add(boat)
     boats.add(boat)
-def newecopter():
-    
+def newecopter():    
     ecopter=Ecopter()
     all_sprites.add(ecopter)
     ecopters.add(ecopter)    
@@ -248,8 +238,7 @@ def mobgen():
         newecopter()       
 def start():
     global hi_score,score
-    screen.fill(White)
-    
+    screen.fill(Aqua)   
     msg("Heli Shooter",50,Red,200,100)
     if score>hi_score:
         hscore=open("highscore.txt","w")
@@ -264,17 +253,13 @@ def start():
                 pygame.quit()
                 quit()
         c=pygame.mouse.get_pos()
-        click=pygame.mouse.get_pressed()
-        
-        if 150+70>c[0]>150 and 160+40>c[1]>160:
-             
+        click=pygame.mouse.get_pressed()       
+        if 150+70>c[0]>150 and 160+40>c[1]>160:             
              msg("Start",30,Blue,180,180)
              if click[0]==1:
                 wait=0
-        else:
-            
-            msg("Start",30,Red,180,180)
-        
+        else:          
+            msg("Start",30,Red,180,180)        
         if 160+60>c[0]>160 and 230+40>c[1]>230:
              msg("Exit",30,Blue,180,240)
              if click[0]==1:
@@ -285,10 +270,8 @@ def start():
         pygame.display.update()
 def pause():
     screen.blit(bg,[0,0])
-    msg("Paused",50,Red,200,100)
-    
-    pygame.display.update()
-    
+    msg("Paused",50,Red,200,100)    
+    pygame.display.update()    
     wait=True
     while wait:
         for event in pygame.event.get():
@@ -305,8 +288,7 @@ def Score():
     global intro,score,hscore
     gover=True
     if  score>hi_score:
-        hscore=open("highscore.txt","w")
-        
+        hscore=open("highscore.txt","w")        
         hscore.write(str(score))
         hscore.close()
     while gover:
@@ -315,20 +297,15 @@ def Score():
                 pygame.quit()
                 quit()
             if event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_c:
-                    
+                if event.key==pygame.K_RETURN:
                     gover=False
-                elif event.key==pygame.K_r:
-                    gover=False
-                    intro=True
                 elif event.key==pygame.K_ESCAPE:
                     pygame.quit()
                     quit()
         msg("High Score :"+str(hi_score),25,Blue,200,50)            
         msg("Game Over",30,Red,200,100)
         msg("Your Score :"+str(score),25,Blue,200,200)
-        pygame.display.flip()
-        
+        pygame.display.flip()      
 score=0
 run=True
 intro=True
@@ -336,14 +313,14 @@ over=False
 hscore=open("highscore.txt","r")
 hi_score=int(hscore.read())
 while run:
+    hscore=open("highscore.txt","r")
+    hi_score=int(hscore.read())
     clock.tick(50)
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             run=False
         if event.type==pygame.KEYDOWN:
-            
-                player.shoot()
-                
+                player.shoot()               
                 if event.key==pygame.K_RETURN:
                     pause()
     if intro:
@@ -368,6 +345,7 @@ while run:
         score=0
         intro=False
     if over:
+        Score()
         all_sprites=pygame.sprite.Group()
         cloud=Cloud()
         player=Player(200,100)
@@ -385,50 +363,45 @@ while run:
         boat=Boat()
         boats.add(boat)
         all_sprites.add(boat)
-        
-        over=False
-    
+        score=0
+        over=False    
     all_sprites.update()
     last_shot=pygame.time.get_ticks()
     hits=pygame.sprite.groupcollide(mobs,bullets,True,True)
     if hits:
-        score+=1
-        mobgen()
+            score+=10
+            mobgen()
     hits1=pygame.sprite.spritecollide(player,mobs,True)
     if hits1:
         Score()
         mobgen()
     hits2=pygame.sprite.groupcollide(boats,bullets,True,True)
     if hits2:
-        score+=3
-
+        score+=30
         mobgen()
     hits4=pygame.sprite.spritecollide(player,ebullets,True)
     if hits4:
-        Score()
         over=True
     hits5=pygame.sprite.groupcollide(bullets,ships,True,True)
     if hits5:
-        score+=10
+        score+=50
         mobgen()
     hits6=pygame.sprite.spritecollide(player,ships,False)
     if hits6:
-        Score()
         over=True
     hits7=pygame.sprite.groupcollide(bullets,ecopters,True,True)
     if hits7:
-        score+=5
+        score+=40
         mobgen()
     hits8=pygame.sprite.spritecollide(player,ecopters,False)
     if hits8:
-        Score()
-        over=True    
-    screen.fill(White)    
+        over=True
+    hits9=pygame.sprite.spritecollide(player,boats,False)    
+    if hits9:
+        over=True  
     screen.blit(bg,[0,0]) 
     all_sprites.draw(screen)
-    msg("Score:"+str(score),30,Red,60,30)
-
+    msg("Score:"+str(score),20,Red,50,20)
     pygame.display.flip()
 pygame.quit()
 quit()
-
