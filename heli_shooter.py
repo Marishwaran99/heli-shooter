@@ -37,7 +37,6 @@ class Player(pygame.sprite.Sprite):
         self.i1=pygame.transform.scale(self.i1,[60,50]) 
         self.i2=pygame.image.load("copter1.png")
         self.i2=pygame.transform.scale(self.i2,[60,50])
-        self.i3=pygame.image.load("crash.png")
         self.image=self.i1
         self.rect=self.image.get_rect()
         self.rect.x=x
@@ -429,7 +428,6 @@ while run:
     msg("Score:"+str(score),20,Red,220,15)
     drawlives(10,10,lives)
     if lives<=0:
-        player.image=player.i3
         over=1
     pygame.display.flip()
 pygame.quit()
